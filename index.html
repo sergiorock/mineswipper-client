@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app" class="container">
+    <h2> {{title}} </h2>
+    <br>
+
+    <form @submit="createGame">
+      <div class="row">
+        <div class="col">
+          <input type="number" class="form-control" id="rows" name="rows" v-model="form.rows" placeholder="Rows">
+        </div>
+        <div class="col">
+          <input type="number" class="form-control" id="columns" name="columns" v-model="form.columns" placeholder="Columns">
+        </div>
+        <div class="col">
+          <input type="number" class="form-control" id="mines" name="mines" v-model="form.mines" placeholder="Mines">
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-primary">New Game!</button>
+        </div>
+      </div>
+    </form>
+
+    <br>
+    <h4>Games</h4>
+    <div class="row">
+      <div class="col-3">
+        <table class="table table-striped">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">#</th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <div >
+            <tr v-for="game in games">
+              <td> {{ game.id }} </td>
+              <td v-if="game.status">{{game.status}}</td>
+              <td scope="row" v-else>active</td>
+              <td v-if="game.status == 'lost'"><button v-on:click="getGame(game.id)" class="btn btn-danger">Show</button></td>
+              <td v-else-if="game.status == 'won'"><button v-on:click="getGame(game.id)" class="btn btn-success">Show</button></td>
+              <td v-else><button v-on:click="getGame(game.id)" class="btn btn-primary">Resume</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="game" class="col-9" v-if="game != null">
+        <table>
+          <tr v-for="(r, index) in game.rows" :key="'r'+game.id+index" >
+            <td v-for="(c, index) in game.columns" :key="'c'+game.id+index">
+              <div v-if="findCell(r, c).is_revealed != true">
+                <span>
+                  <i class="fa fa-eye" v-on:click="reveal(game.id, r, c)"></i>
+                </span>
+                <span v-if="findCell(r, c).status == 'flag'">
+                  <i class="fa fa-flag text-danger" v-on:click="flag(game.id, 'flag', r, c)"></i>
+                </span>
+                <span v-else>
+                  <i class="fa fa-flag" v-on:click="flag(game.id, 'flag', r, c)"></i>
+                </span>
+                <span v-if="findCell(r, c).status == 'question'">
+                  <i class="fa fa-question text-danger" v-on:click="flag(game.id, 'question', r, c)"></i>
+                </span>
+                <span v-else>
+                  <i class="fa fa-question" v-on:click="flag(game.id, 'question', r, c)"></i>
+                </span>
+              </div>
+              <div v-else>
+                <span v-if="findCell(r, c).valor == 'bomb'">
+                  <i class="fa fa-bomb" style="color: orangered"></i>
+                </span>
+                <span v-else>{{ findCell(r, c).valor }}</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+  </div>
+
+  <style>
+    table#board
+
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    td {
+      text-align: center;
+      height: 80px;
+      width: 80px;
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+    }
+    </style>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
