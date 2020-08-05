@@ -1,4 +1,4 @@
-const apiUrl = "http://minesweeper-rails.herokuapp.com"
+const apiUrl = "https://minesweeper-rails.herokuapp.com"
 // const apiUrl = "http://localhost:3000"
 
 new Vue({
