@@ -11,14 +11,31 @@ new Vue({
       games: null,
       cell: null,
       form: {
+        email: '',
         rows: '',
         columns: '',
         mines: ''
+      },
+      searchForm: {
+        email: null,
       }
     }
   },
 
   methods: {
+
+    search(e) {
+      var self=this;
+      var email = self.searchForm.email;
+      e.preventDefault()
+      axios.get(`${apiUrl}/games.json`, { params: { email } })
+      .then(function (response) {
+        self.games = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
 
     createGame(e) {
       var self=this;
