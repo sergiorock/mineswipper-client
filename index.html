@@ -10,48 +10,50 @@
 <body>
   <div id="app" class="container">
     <br>
-    <h2> {{title}} </h2>
+    <h2 class="title"> {{title}} <span><i class="fa fa-bomb"></i></span></h2>
     <br>
 
     <form @submit="createGame">
       <div class="row">
-        <div class="col-4">
+        <div class="col-md-4">
           <input type="email" class="form-control" id="email" name="email" v-model="form.email" placeholder="Email">
         </div>
-        <div class="col">
+        <div class="col-md-2">
           <input type="number" class="form-control" id="rows" name="rows" v-model="form.rows" placeholder="Rows">
         </div>
-        <div class="col">
+        <div class="col-md-2">
           <input type="number" class="form-control" id="columns" name="columns" v-model="form.columns" placeholder="Columns">
         </div>
-        <div class="col">
+        <div class="col-md-2">
           <input type="number" class="form-control" id="mines" name="mines" v-model="form.mines" placeholder="Mines">
         </div>
-        <div class="col">
-          <button type="submit" class="btn btn-primary">New Game!</button>
+        <div class="col-sm-12 col-md-2">
+          <button type="submit" class="btn btn-primary mobile-submit">New Game!</button>
         </div>
       </div>
     </form>
-
     <br>
     <br>
     <div class="row">
-      <div class="col-4">
+      <div class="col-sm-12 col-md-5">
         <table id="games" class="table table-striped">
           <thead>
             <tr class="text-center">
               <th scope="col">#</th>
-              <th scope="col">Status</th>
               <th scope="col">User</th>
+              <th scope="col">Status</th>
+              <th scope="col"><small><strong>Time (min)</strong></small></th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="game in games">
               <td> {{ game.id }} </td>
-              <td v-if="game.status">{{game.status}}</td>
-              <td scope="row" v-else>active</td>
               <td> <small>{{game.email}}</small></td>
+              <td class="text-capitalize" v-if="game.status">{{game.status}}</td>
+              <td v-else>Active</td>
+              <td v-if="game.time_spent"> {{game.time_spent}} </td>
+              <td v-else><small>Playing</small></td>
               <td v-if="game.status == 'lost'"><button v-on:click="getGame(game.id)" class="btn btn-danger btn-sm">Show</button></td>
               <td v-else-if="game.status == 'won'"><button v-on:click="getGame(game.id)" class="btn btn-success btn-sm">Show</button></td>
               <td v-else><button v-on:click="getGame(game.id)" class="btn btn-primary btn-sm">Resume</button></td>
@@ -69,7 +71,9 @@
           </div>
         </form>
       </div>
-      <div class="col-8" v-if="game != null">
+      <br>
+      <br>
+      <div class="col-sm-12 col-md-7" v-if="game != null">
         <table id="board" style="margin:auto">
           <tr v-for="(r, index) in game.rows" :key="'r'+game.id+index" >
             <td v-for="(c, index) in game.columns" :key="'c'+game.id+index">
@@ -114,6 +118,10 @@
       padding: 5px;
     }
 
+    table#games th {
+      padding: 5px 0;
+    }
+
     td {
       text-align: center;
       height: 80px;
@@ -123,6 +131,19 @@
 
     a {
       text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-submit {
+        width: 100%;
+      }
+      input {
+        margin-bottom: 5px;
+      }
+
+      h2.title {
+        text-align: center;
+      }
     }
     </style>
 
